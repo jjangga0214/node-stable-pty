@@ -1,0 +1,15 @@
+{
+  "name": "stable-pty-darwin-universal",
+  "version": "0.0.0",
+  "os": [
+    "darwin"
+  ],
+  "main": "stable-pty.darwin-universal.node",
+  "files": [
+    "stable-pty.darwin-universal.node"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10"
+  }
+}
