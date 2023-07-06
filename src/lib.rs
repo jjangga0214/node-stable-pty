@@ -47,7 +47,7 @@ pub fn exec(callback: JsFunction) -> Result<()> {
       ctx.env.create_string(&ctx.value).map(|v| vec![v])
     })?;
   pty::pty(move |line| {
-    tsfn.call(Ok(line), ThreadsafeFunctionCallMode::NonBlocking);
+    tsfn.call(Ok(line), ThreadsafeFunctionCallMode::Blocking);
     // let tsfn = tsfn.clone();
     // thread::spawn(move || {
     //   tsfn.call(Ok(line), ThreadsafeFunctionCallMode::NonBlocking);
