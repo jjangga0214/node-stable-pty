@@ -46,14 +46,12 @@ pub fn exec(callback: JsFunction) -> Result<()> {
     .create_threadsafe_function(0, |ctx: ThreadSafeCallContext<String>| {
       ctx.env.create_string(&ctx.value).map(|v| vec![v])
     })?;
-  // let tsfn = callback.create_threadsafe_function(0, |ctx: ThreadSafeCallContext<String>| {
-  //   ctx.env.create_string(&ctx.value).map(|v| vec![v])
-  // })?;
   pty::pty(move |line| {
-    let tsfn = tsfn.clone();
-    thread::spawn(move || {
-      tsfn.call(Ok(line), ThreadsafeFunctionCallMode::NonBlocking);
-    });
+    tsfn.call(Ok(line), ThreadsafeFunctionCallMode::NonBlocking);
+    // let tsfn = tsfn.clone();
+    // thread::spawn(move || {
+    //   tsfn.call(Ok(line), ThreadsafeFunctionCallMode::NonBlocking);
+    // });
   });
   Ok(())
 }
