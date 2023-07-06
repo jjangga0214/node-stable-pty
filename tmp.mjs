@@ -1,7 +1,10 @@
-import { sum, callThreadsafeFunction, tmp } from './index.js'
+import {exec } from './index.js'
 
-console.log(sum(1, 2565652))
+// console.log(sum(1, 2565652))
 // callThreadsafeFunction((err, res) => {
 //     console.log(res)
 // })
-tmp();
+// tmp();
+exec((err, line) => {
+  console.log(line)
+})

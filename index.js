@@ -252,8 +252,8 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { sum, callThreadsafeFunction, tmp } = nativeBinding
+const { callThreadsafeFunction, tmp, exec } = nativeBinding
 
-module.exports.sum = sum
 module.exports.callThreadsafeFunction = callThreadsafeFunction
 module.exports.tmp = tmp
+module.exports.exec = exec

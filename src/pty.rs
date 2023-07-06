@@ -1,7 +1,8 @@
 use portable_pty::{CommandBuilder, NativePtySystem, PtySize, PtySystem};
-use std::sync::mpsc::channel;
+use std::io::BufRead;
+use std::{io::BufReader, sync::mpsc::channel};
 
-pub fn pty() {
+pub fn pty(callback: impl Fn(String) -> () + Send + 'static) {
   let pty_system = NativePtySystem::default();
   let pair = pty_system
     .openpty(PtySize {
@@ -10,7 +11,8 @@ pub fn pty() {
       pixel_width: 0,
       pixel_height: 0,
     })
-    .unwrap();
+    .expect("Failed to create PTY.");
+
   let argv = "ls -al";
   let argv = "node /Users/ocean/main/haetae/packages/utils/counter.js";
   let cwd = "/Users/ocean/main/haetae/packages/utils";
@@ -32,13 +34,21 @@ pub fn pty() {
   // This is important because it is easy to encounter a situation
   // where read/write buffers fill and block either your process
   // or the spawned process.
-  let (tx, rx) = channel();
-  let mut reader = pair.master.try_clone_reader().unwrap();
+  let (tx, rx) = channel::<String>();
+  let reader = pair.master.try_clone_reader().unwrap();
   std::thread::spawn(move || {
     // Consume the output from the child
-    let mut s = String::new();
-    reader.read_to_string(&mut s).unwrap();
-    tx.send(s).unwrap();
+    // let mut s = String::new();
+    // reader.read_to_string(&mut s).unwrap();
+    let reader = BufReader::new(reader);
+    for line in reader.lines() {
+      //   println!("{}", line.unwrap());
+      match line {
+        Ok(value) => tx.send(value).unwrap(),
+        _ => break,
+      }
+    }
+    // tx.send(s).unwrap();
   });
 
   {
@@ -84,17 +94,26 @@ pub fn pty() {
   // sooner than that.
   drop(pair.master);
 
-  // Now wait for the output to be read by our reader thread
-  let output = rx.recv().unwrap();
+  std::thread::spawn(move || {
+    loop {
+      match rx.recv() {
+        Ok(line) => callback(line), //println!("{:?}", value),
+        _ => break,
+      }
+    }
+  });
 
-  println!("{}", output);
+  // Now wait for the output to be read by our reader thread
+  //   let output = rx.recv().unwrap();
+
+  //   println!("{}", output);
 
   // We print with escapes escaped because the windows conpty
   // implementation synthesizes title change escape sequences
   // in the output stream and it can be confusing to see those
   // printed out raw in another terminal.
   print!("output: ");
-  for c in output.escape_debug() {
-    print!("{}", c);
-  }
+  //   for c in output.escape_debug() {
+  //     print!("{}", c);
+  //   }
 }
