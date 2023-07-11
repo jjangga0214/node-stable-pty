@@ -15,7 +15,7 @@ pub fn pty(callback: impl Fn(String) -> () + Send + 'static) {
 
   let argv = "ls -al";
   let argv = "node /Users/ocean/main/haetae/packages/utils/counter.js";
-  let argv = "pnpm test";
+  //   let argv = "pnpm test";
   let cwd = "/Users/ocean/main/haetae/packages/utils";
   let mut cmd = CommandBuilder::from_argv(
     shell_words::split(argv)
@@ -25,7 +25,7 @@ pub fn pty(callback: impl Fn(String) -> () + Send + 'static) {
       .collect(),
   );
   cmd.cwd(cwd);
-  pair.slave.spawn_command(cmd).unwrap();
+  let mut child = pair.slave.spawn_command(cmd).unwrap();
 
   // Release any handles owned by the slave: we don't need it now
   // that we've spawned the child.
@@ -50,5 +50,7 @@ pub fn pty(callback: impl Fn(String) -> () + Send + 'static) {
       }
     }
   });
-//   handle.join().unwrap();
+  // Wait for the child to complete
+  println!("child status: {:?}", child.wait().unwrap());
+  //   handle.join().unwrap();
 }
