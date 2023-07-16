@@ -1,6 +1,7 @@
 import { setTimeout } from "node:timers/promises";
 import { dirname } from "dirname-filename-esm";
 import { exec, ExecError } from "../index.js";
+import chalk from "chalk";
 
 describe("exec", () => {
   test("basic usage", async () => {
@@ -31,6 +32,17 @@ describe("exec", () => {
       print: false,
     });
     await expect(result).resolves.toEqual(cwd);
+  });
+
+  test("color", async () => {
+    const cwd = dirname(import.meta);
+    const result = exec("node color.js", {
+      cwd,
+      print: false,
+    });
+    await expect(result).resolves.toEqual(
+      `${chalk.red("red")}, ${chalk.green("green")}, ${chalk.blue("blue")}`
+    );
   });
 
   test("kill", async () => {
