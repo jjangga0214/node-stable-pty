@@ -24,9 +24,9 @@ impl ExecResult {
 }
 
 #[napi(
-  ts_args_type = "argv: string, cwd: string, onLine: (err: null | Error, result: number) => void, onExit: (err: null | Error, result: number) => void"
+  ts_args_type = "argv: string, cwd: string, onLine: (err: null | Error, result: string) => void, onExit: (err: null | Error, result: number) => void"
 )]
-pub fn exec(argv: String, cwd: String, on_line: JsFunction, on_exit: JsFunction) -> ExecResult {
+pub fn exec_pty(argv: String, cwd: String, on_line: JsFunction, on_exit: JsFunction) -> ExecResult {
   let on_line: ThreadsafeFunction<String, ErrorStrategy::CalleeHandled> = on_line
     .create_threadsafe_function(0, |ctx: ThreadSafeCallContext<String>| {
       ctx.env.create_string(&ctx.value).map(|v| vec![v])
@@ -86,7 +86,6 @@ pub fn exec(argv: String, cwd: String, on_line: JsFunction, on_exit: JsFunction)
       }
     }
     let status = child.write().unwrap().wait().unwrap();
-    // (&reader_handle).join().unwrap();
     on_exit(status.exit_code());
   });
 

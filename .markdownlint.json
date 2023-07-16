@@ -1,0 +1,5 @@
+{
+  "extends": "./node_modules/@jjangga0214/markdownlint-config/index.json",
+  "MD024": false,
+  "MD041": false
+}

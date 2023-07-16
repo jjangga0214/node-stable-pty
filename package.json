@@ -1,8 +1,32 @@
 {
   "name": "stable-pty",
-  "version": "0.0.0",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "version": "0.0.1",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/*.d.ts",
+    "dist/*.d.cts",
+    "dist/*.map",
+    "dist/*.js",
+    "dist/*.cjs",
+    "dist/*.node"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">= 12.4.0"
+  },
+  "packageManager": "yarn@3.6.1",
+  "scripts": {
+    "ts": "ts-node",
+    "artifacts": "napi artifacts",
+    "build": "napi build --platform --release --js binding.cjs --dts binding.d.cts && tsc -p tsconfig.build.json && cpy binding.* *.node dist",
+    "build:debug": "napi build --platform --js binding.cjs --dts binding.d.cts && tsc -p tsconfig.build.json && cpy binding.* *.node dist",
+    "prepublishOnly": "napi prepublish -t npm",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "universal": "napi universal",
+    "version": "napi version"
+  },
   "napi": {
     "name": "stable-pty",
     "triples": {
@@ -21,25 +45,78 @@
       ]
     }
   },
-  "license": "MIT",
   "devDependencies": {
+    "@jjangga0214/commitlint-config": "^1.0.7",
+    "@jjangga0214/eslint-config": "^3.3.1",
+    "@jjangga0214/jest-config": "^4.3.0",
+    "@jjangga0214/markdownlint-config": "^1.0.3",
+    "@jjangga0214/prettier-config": "^2.0.2",
+    "@jjangga0214/tsconfig": "^3.3.0",
     "@napi-rs/cli": "^2.16.1",
-    "ava": "^5.1.1"
+    "@swc/core": "^1.2.125",
+    "@swc/helpers": "^0.2.12",
+    "@swc/jest": "^0.2.21",
+    "@types/jest": "~29.5.0",
+    "@types/node": "^18.6.0",
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
+    "@typescript-eslint/parser": "^4.28.4",
+    "commitizen": "^4.2.4",
+    "cpy-cli": "^5.0.0",
+    "cross-env": "^7.0.3",
+    "dirname-filename-esm": "^1.1.1",
+    "eslint": "^8.6.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^25.3.4",
+    "eslint-plugin-markdown": "^2.2.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-unicorn": "^39.0.0",
+    "husky": "^7.0.1",
+    "jest": "^29.5.0",
+    "lint-staged": "^12.1.5",
+    "markdownlint-cli": "^0.30.0",
+    "prettier": "^2.5.1",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6",
+    "typescript-cp": "^0.1.8"
   },
-  "ava": {
-    "timeout": "3m"
+  "lint-staged": {
+    "*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}": [
+      "eslint --fix"
+    ],
+    "*.md": [
+      "markdownlint --fix"
+    ]
   },
-  "engines": {
-    "node": ">= 10"
+  "keywords": [
+    "pty",
+    "portable-pty",
+    "portable_pty",
+    "exec",
+    "execute",
+    "execfile",
+    "child",
+    "process",
+    "fork",
+    "spawn",
+    "shell",
+    "bin",
+    "binary",
+    "binaries",
+    "zx"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jjangga0214/node-stable-pty.git"
   },
-  "scripts": {
-    "artifacts": "napi artifacts",
-    "build": "napi build --platform --release",
-    "build:debug": "napi build --platform",
-    "prepublishOnly": "napi prepublish -t npm",
-    "test": "ava",
-    "universal": "napi universal",
-    "version": "napi version"
+  "bugs": {
+    "url": "https://github.com/jjangga0214/node-stable-pty/issues"
   },
-  "packageManager": "yarn@3.6.1"
+  "homepage": "https://github.com/jjangga0214/node-stable-pty",
+  "author": {
+    "name": "Gil B. Chan",
+    "email": "bnbcmindnpass@gmail.com",
+    "url": "https://github.com/jjangga0214"
+  }
 }
