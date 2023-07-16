@@ -16,4 +16,5 @@ export default {
       useESM: true,
     },],
   },
+  testTimeout: 10 * 1000,
 }
