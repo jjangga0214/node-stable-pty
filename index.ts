@@ -3,53 +3,52 @@ import { execPty } from "./binding.cjs";
 export interface ExecOptions {
   cwd?: string;
   print?: boolean;
-  onData?: (line: string) => void;
+  onLine?: (line: string) => void;
 }
 
-export interface ExecResult {
+export interface ExecReturn extends Promise<string> {
+  kill: () => void;
+}
+
+export interface ExecError extends Error {
   output: string;
   exitCode: number;
 }
 
-export interface ExecReturn extends Promise<ExecResult> {
-  kill: () => void;
-}
-
 export function exec(
   command: string,
-  { cwd = process.cwd(), print = true, onData = () => {} }: ExecOptions = {}
+  { cwd = process.cwd(), print = true, onLine = () => {} }: ExecOptions = {}
 ): ExecReturn {
   // @ts-ignore
   const execPtyResStore: { kill: () => void } = {};
   // @ts-ignore
-  const result: ExecReturn = new Promise<ExecResult>((resolve, reject) => {
+  const output: ExecReturn = new Promise<string>((resolve, reject) => {
     const lines: string[] = [];
     const execPtyRes = execPty(
       command,
       cwd,
       (err, line) => {
         if (err) {
-          reject(err); // This does not mean stderr. This means something wrong happens in rust's side.
+          // This does not mean stderr. This means something wrong happens in rust's side.
+          // So, this err object is rejected without exitCode.
+          reject(err);
         }
         if (print) {
           console.log(line);
         }
-        onData(line)
+        onLine(line);
         lines.push(line);
       },
       (err, exitCode) => {
+        const output = lines.join("\n");
         if (err) {
-          reject(err);
+          reject({ ...err, output, exitCode });
         }
-        const result = {
-          output: lines.join("\n"),
-          exitCode,
-        };
         if (exitCode !== 0) {
-          const error = new Error();
-          reject({ ...error, ...result });
+          const error = new Error(output);
+          reject({ ...error, output, exitCode });
         }
-        resolve(result);
+        resolve(output);
       }
     );
     execPtyResStore.kill = () => {
@@ -58,7 +57,7 @@ export function exec(
       execPtyRes.kill();
     };
   });
-  result.kill = execPtyResStore.kill;
+  output.kill = execPtyResStore.kill;
 
-  return result;
+  return output;
 }
