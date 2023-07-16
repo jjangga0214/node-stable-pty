@@ -34,12 +34,9 @@
         "aarch64-apple-darwin",
         "aarch64-linux-android",
         "aarch64-unknown-linux-gnu",
-        "aarch64-unknown-linux-musl",
         "aarch64-pc-windows-msvc",
-        "armv7-unknown-linux-gnueabihf",
         "x86_64-unknown-linux-musl",
         "x86_64-unknown-freebsd",
-        "i686-pc-windows-msvc",
         "armv7-linux-androideabi",
         "universal-apple-darwin"
       ]
@@ -48,7 +45,7 @@
   "devDependencies": {
     "@jjangga0214/commitlint-config": "^1.0.7",
     "@jjangga0214/eslint-config": "^3.3.1",
-    "@jjangga0214/jest-config": "^4.3.0",
+    "@jjangga0214/jest-config": "^4.4.0",
     "@jjangga0214/markdownlint-config": "^1.0.3",
     "@jjangga0214/prettier-config": "^2.0.2",
     "@jjangga0214/tsconfig": "^3.3.0",

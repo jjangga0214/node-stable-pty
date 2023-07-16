@@ -987,9 +987,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jjangga0214/jest-config@npm:^4.3.0":
-  version: 4.3.0
-  resolution: "@jjangga0214/jest-config@npm:4.3.0"
+"@jjangga0214/jest-config@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "@jjangga0214/jest-config@npm:4.4.0"
   dependencies:
     ts-jest: ^28.0.7
   peerDependencies:
@@ -1010,7 +1010,7 @@ __metadata:
       optional: true
     typescript:
       optional: true
-  checksum: 4d18c559465664d06d41b685589030460245bb7cfa6c57dea8e66ba15ee0221aa84d0e999c3fb7b8dd2ce9230c005348a3d2cfebc2d70cfcc49d9aa7f45fddb2
+  checksum: c4b4ccdd82b03b85113cafcca601e03645e180eba24a0fcbf85ba1ab5aa8ca88db21cb61975ccd2ac9b1efefa74c3bf47a8231ad803d0a1d9ba4393a69be8883
   languageName: node
   linkType: hard
 
@@ -7408,7 +7408,7 @@ __metadata:
   dependencies:
     "@jjangga0214/commitlint-config": ^1.0.7
     "@jjangga0214/eslint-config": ^3.3.1
-    "@jjangga0214/jest-config": ^4.3.0
+    "@jjangga0214/jest-config": ^4.4.0
     "@jjangga0214/markdownlint-config": ^1.0.3
     "@jjangga0214/prettier-config": ^2.0.2
     "@jjangga0214/tsconfig": ^3.3.0
