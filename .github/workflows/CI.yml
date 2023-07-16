@@ -26,9 +26,12 @@ jobs:
             target: x86_64-apple-darwin
             build: |
               yarn build
+              yarn postbuild
               strip -x *.node
           - host: windows-latest
-            build: yarn build
+            build: |
+              yarn build
+              yarn postbuild
             target: x86_64-pc-windows-msvc
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
@@ -36,15 +39,17 @@ jobs:
             build: |-
               set -e &&
               yarn build --target x86_64-unknown-linux-gnu &&
+              yarn postbuild
               strip *.node
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-            build: set -e && yarn build && strip *.node
+            build: set -e && yarn build && yarn postbuild && strip *.node
           - host: macos-latest
             target: aarch64-apple-darwin
             build: |
               yarn build --target aarch64-apple-darwin
+              yarn postbuild
               strip -x *.node
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
@@ -52,20 +57,25 @@ jobs:
             build: |-
               set -e &&
               yarn build --target aarch64-unknown-linux-gnu &&
+              yarn postbuild
               aarch64-unknown-linux-gnu-strip *.node
           - host: ubuntu-latest
             target: aarch64-linux-android
             build: |
               yarn build --target aarch64-linux-android
+              yarn postbuild
               ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip *.node
           - host: ubuntu-latest
             target: armv7-linux-androideabi
             build: |
               yarn build --target armv7-linux-androideabi
+              yarn postbuild
               ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip *.node
           - host: windows-latest
             target: aarch64-pc-windows-msvc
-            build: yarn build --target aarch64-pc-windows-msvc
+            build: |
+              yarn build --target aarch64-pc-windows-msvc
+              yarn postbuild
     name: stable - ${{ matrix.settings.target }} - node@18
     runs-on: ${{ matrix.settings.host }}
     steps:
@@ -130,7 +140,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-${{ matrix.settings.target }}
-          path: ${{ env.APP_NAME }}.*.node
+          path: |
+            ${{ env.APP_NAME }}.*.node
+            dist/
+            binding.d.cts
+            binding.cjs
           if-no-files-found: error
   build-freebsd:
     runs-on: macos-12
@@ -171,6 +185,7 @@ jobs:
             freebsd-version
             yarn install
             yarn build
+            yarn postbuild
             strip -x *.node
             yarn test
             rm -rf node_modules

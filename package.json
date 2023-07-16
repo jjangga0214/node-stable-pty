@@ -20,7 +20,8 @@
   "scripts": {
     "ts": "ts-node-esm",
     "artifacts": "napi artifacts",
-    "build": "napi build --platform --release --js binding.cjs --dts binding.d.cts && tsc -p tsconfig.build.json && cpy binding.* *.node dist",
+    "build": "napi build --platform --release --js binding.cjs --dts binding.d.cts",
+    "postbuild": "tsc -p tsconfig.build.json && cpy binding.* *.node dist",
     "build:debug": "napi build --platform --js binding.cjs --dts binding.d.cts && tsc -p tsconfig.build.json && cpy binding.* *.node dist",
     "prepublishOnly": "napi prepublish -t npm",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
