@@ -1,0 +1,77 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "node <source>",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${fileDirname}",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["${input:filepath}"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "yarn ts <file>",
+      "request": "launch",
+      "type": "node",
+      "cwd": "${fileDirname}",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["ts", "${input:filepath}"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "yarn test",
+      "request": "launch",
+      "type": "node",
+      "cwd": "${fileDirname}",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["test", "${input:filepath}"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "yarn test -- --testNamePattern <pattern>",
+      "request": "launch",
+      "type": "node",
+      "cwd": "${fileDirname}",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": [
+        "test",
+        "--",
+        "--testNamePattern",
+        "${input:--testNamePattern}"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "yarn <command>",
+      "request": "launch",
+      "type": "node",
+      "cwd": "${fileDirname}",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["${input:command}"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "filepath",
+      "type": "promptString",
+      "description": "What is the file path relative from cwd?"
+    },
+    {
+      "id": "--testNamePattern",
+      "type": "promptString",
+      "description": "What is the argument for `--testNamePattern` option?"
+    },
+    {
+      "id": "command",
+      "type": "promptString",
+      "description": "What is the command you want to experiment?"
+    }
+  ]
+}

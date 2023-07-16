@@ -91,7 +91,6 @@ pub fn exec_pty(argv: String, cwd: String, on_line: JsFunction, on_exit: JsFunct
 
   ExecResult {
     _kill: Box::new(move || {
-      println!("killing...");
       let _ = child_copy.write().unwrap().kill();
     }),
   }
