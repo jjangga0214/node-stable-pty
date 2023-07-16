@@ -1,4 +1,4 @@
-import { setTimeout } from "node:timers/promises";
+import { setTimeout } from "timers/promises";
 import { dirname } from "dirname-filename-esm";
 import { exec, ExecError } from "../index.js";
 import chalk from "chalk";
