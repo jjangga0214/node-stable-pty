@@ -53,7 +53,7 @@ describe("exec", () => {
     await setTimeout(1000);
     result.kill();
     await expect(result).rejects.toEqual({
-      output: "0\n1",
+      output: "0\n1\n2\n3",
       exitCode: 1,
     });
   });
