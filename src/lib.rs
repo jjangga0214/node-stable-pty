@@ -52,7 +52,7 @@ pub fn exec_pty(argv: String, cwd: String, on_line: JsFunction, on_exit: JsFunct
     .expect("Failed to create PTY.");
 
   let argv = if cfg!(windows) {
-    "cmd /c ".to_owned() + &argv
+    "cmd /C ".to_owned() + &argv
   } else {
     argv
   };
