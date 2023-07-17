@@ -12,9 +12,10 @@ export default {
   // },
   // transform: { '^.+\\.(m|c)?(t|j)sx?$': ['esbuild-jest'] },
   transform: {
-    '^.+\\.(m|c)?(t|j)sx?$': ['ts-jest', {
+    '^.+\\.(m)?(t|j)sx?$': ['ts-jest', {
       useESM: true,
     },],
+    '^.+\\.c(t|j)sx?$': ['ts-jest'],
   },
   testTimeout: 60 * 1000,
 }
