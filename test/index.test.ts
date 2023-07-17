@@ -5,10 +5,15 @@ import chalk from "chalk";
 import { jest } from "@jest/globals";
 
 describe("exec", () => {
-
   beforeEach(() => {
     // REF: https://github.com/jestjs/jest/issues/6434#issuecomment-525576660
     jest.useFakeTimers();
+  });
+
+  // REF: https://testing-library.com/docs/using-fake-timers/
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
   });
 
   test("basic usage", async () => {
