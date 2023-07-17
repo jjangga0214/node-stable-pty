@@ -42,6 +42,7 @@
     }
   },
   "devDependencies": {
+    "@jest/globals": "^29.6.1",
     "@jjangga0214/commitlint-config": "^1.0.7",
     "@jjangga0214/eslint-config": "^3.3.1",
     "@jjangga0214/jest-config": "^4.4.0",
