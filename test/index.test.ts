@@ -50,7 +50,7 @@ describe("exec", () => {
       cwd: dirname(import.meta),
       print: false,
     });
-    await setTimeout(2500);
+    await setTimeout(1000);
     result.kill();
     await expect(result).rejects.toEqual({
       output: "0\n1",
