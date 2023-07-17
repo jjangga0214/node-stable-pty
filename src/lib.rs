@@ -51,6 +51,12 @@ pub fn exec_pty(argv: String, cwd: String, on_line: JsFunction, on_exit: JsFunct
     })
     .expect("Failed to create PTY.");
 
+  let argv = if cfg!(windows) {
+    "cmd /c ".to_owned() + &argv
+  } else {
+    argv
+  };
+
   let mut cmd = CommandBuilder::from_argv(
     shell_words::split(&argv)
       .unwrap()
