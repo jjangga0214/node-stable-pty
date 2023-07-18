@@ -15,7 +15,7 @@ export default {
     '^.+\\.(m)?(t|j)sx?$': ['ts-jest', {
       useESM: true,
     },],
-    '^.+\\.c(t|j)sx?$': ['ts-jest'],
+    // '^.+\\.c(t|j)sx?$': ['ts-jest'],
   },
   testTimeout: 60 * 1000,
 }
