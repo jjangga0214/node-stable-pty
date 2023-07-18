@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import Mocha from "mocha";
 import { setTimeout } from "timers/promises";
 import { dirname } from "dirname-filename-esm";
 import chalk from "chalk";
@@ -36,6 +35,7 @@ describe("exec", () => {
   });
 
   it("should print ANSI color", async function () {
+    this.timeout(15 * 1000); // Sometimes CI is slow
     const cwd = dirname(import.meta);
     const result = exec("node color.js", {
       cwd,
@@ -46,8 +46,8 @@ describe("exec", () => {
     );
   });
 
-  it("should kill the pty child and let promise be rejected", async function (this: Mocha.Context) {
-    this.timeout(15 * 1000);
+  it("should kill the pty child and let promise be rejected", async function () {
+    this.timeout(15 * 1000); // Sometimes CI is slow
     try {
       const result = exec("node counter.js", {
         cwd: dirname(import.meta),
@@ -66,6 +66,7 @@ describe("exec", () => {
   });
 
   it("should contain exitCode and output in error", async function () {
+    this.timeout(15 * 1000); // Sometimes CI is slow
     try {
       await exec("node counter-error.js", {
         cwd: dirname(import.meta),
