@@ -1,20 +1,19 @@
+import { expect } from "chai";
+import Mocha from "mocha";
 import { setTimeout } from "timers/promises";
 import { dirname } from "dirname-filename-esm";
-import { exec, ExecError } from "../index.js";
 import chalk from "chalk";
-import assert from "assert/strict";
-// import { Mocha } from 'mocha'
+import { exec, ExecError } from "../index.js";
 
 describe("exec", () => {
   it("should return a promise to be resolved as output", async function () {
     const result = exec("echo hello world", {
       print: false,
     });
-    assert.equal(await result, "hello world");
+    expect(await result).to.equal("hello world");
   });
 
   it("should pass line by line sequencially to onLine callback", async function () {
-    // expect.assertions(2);
     const lines: string[] = [];
     const result = exec("echo 'hello\nworld'", {
       onLine: (line) => {
@@ -22,8 +21,8 @@ describe("exec", () => {
       },
       print: false,
     });
-    assert.equal(await result, "hello\nworld");
-    assert.deepEqual(lines, ["hello", "world"]);
+    expect(await result).to.equal("hello\nworld");
+    expect(lines).to.deep.equal(["hello", "world"]);
   });
 
   it("should work with cwd", async function () {
@@ -33,8 +32,7 @@ describe("exec", () => {
       cwd,
       print: false,
     });
-    // await expect(result).resolves.toEqual(cwd);
-    assert.equal(await result, cwd);
+    expect(await result).to.equal(cwd);
   });
 
   it("should print ANSI color", async function () {
@@ -43,15 +41,12 @@ describe("exec", () => {
       cwd,
       print: false,
     });
-    assert.equal(
-      await result,
+    expect(await result).to.equal(
       `${chalk.red("red")}, ${chalk.green("green")}, ${chalk.blue("blue")}`
     );
   });
 
-  it("should kill the pty child and let promise be rejected", async function () //this: Mocha.Context
-  {
-    // @ts-ignore
+  it("should kill the pty child and let promise be rejected", async function (this: Mocha.Context) {
     this.timeout(15 * 1000);
     try {
       const result = exec("node counter.js", {
@@ -61,8 +56,9 @@ describe("exec", () => {
       await setTimeout(5000);
       result.kill();
       await result;
+      expect.fail("promise should be rejected");
     } catch (error) {
-      assert.deepEqual(error, {
+      expect(error).to.deep.equal({
         output: "0\n1\n2\n3",
         exitCode: 1,
       });
@@ -75,10 +71,11 @@ describe("exec", () => {
         cwd: dirname(import.meta),
         print: false,
       });
+      expect.fail("promise should be rejected");
     } catch (error) {
       const err = error as ExecError;
-      assert.equal(err.exitCode, 1);
-      assert(err.output.includes("i is 3!!!! Error!!!!"));
+      expect(err.exitCode).to.equal(1);
+      expect(err.output).to.include("i is 3!!!! Error!!!!");
     }
   });
 });
