@@ -2,29 +2,19 @@ import { setTimeout } from "timers/promises";
 import { dirname } from "dirname-filename-esm";
 import { exec, ExecError } from "../index.js";
 import chalk from "chalk";
-import { jest } from "@jest/globals";
+import assert from "assert/strict";
+// import { Mocha } from 'mocha'
 
 describe("exec", () => {
-  beforeEach(() => {
-    // REF: https://github.com/jestjs/jest/issues/6434#issuecomment-525576660
-    jest.useFakeTimers();
-  });
-
-  // REF: https://testing-library.com/docs/using-fake-timers/
-  afterEach(() => {
-    jest.runOnlyPendingTimers();
-    jest.useRealTimers();
-  });
-
-  test("basic usage", async () => {
+  it("should return a promise to be resolved as output", async function () {
     const result = exec("echo hello world", {
       print: false,
     });
-    await expect(result).resolves.toEqual("hello world");
+    assert.equal(await result, "hello world");
   });
 
-  test("onLine", async () => {
-    expect.assertions(2);
+  it("should pass line by line sequencially to onLine callback", async function () {
+    // expect.assertions(2);
     const lines: string[] = [];
     const result = exec("echo 'hello\nworld'", {
       onLine: (line) => {
@@ -32,46 +22,54 @@ describe("exec", () => {
       },
       print: false,
     });
-    await expect(result).resolves.toEqual("hello\nworld");
-    expect(lines).toEqual(["hello", "world"]);
+    assert.equal(await result, "hello\nworld");
+    assert.deepEqual(lines, ["hello", "world"]);
   });
 
-  test("cwd", async () => {
+  it("should work with cwd", async function () {
     const command = process.platform === "win32" ? "cd" : "pwd";
     const cwd = dirname(import.meta);
     const result = exec(command, {
       cwd,
       print: false,
     });
-    await expect(result).resolves.toEqual(cwd);
+    // await expect(result).resolves.toEqual(cwd);
+    assert.equal(await result, cwd);
   });
 
-  test("color", async () => {
+  it("should print ANSI color", async function () {
     const cwd = dirname(import.meta);
     const result = exec("node color.js", {
       cwd,
       print: false,
     });
-    await expect(result).resolves.toEqual(
+    assert.equal(
+      await result,
       `${chalk.red("red")}, ${chalk.green("green")}, ${chalk.blue("blue")}`
     );
   });
 
-  test("kill", async () => {
-    const result = exec("node counter.js", {
-      cwd: dirname(import.meta),
-      print: false,
-    });
-    await setTimeout(5000);
-    result.kill();
-    await expect(result).rejects.toEqual({
-      output: "0\n1\n2\n3",
-      exitCode: 1,
-    });
+  it("should kill the pty child and let promise be rejected", async function () //this: Mocha.Context
+  {
+    // @ts-ignore
+    this.timeout(15 * 1000);
+    try {
+      const result = exec("node counter.js", {
+        cwd: dirname(import.meta),
+        print: false,
+      });
+      await setTimeout(5000);
+      result.kill();
+      await result;
+    } catch (error) {
+      assert.deepEqual(error, {
+        output: "0\n1\n2\n3",
+        exitCode: 1,
+      });
+    }
   });
 
-  test("error", async () => {
-    expect.assertions(2);
+  it("should contain exitCode and output in error", async function () {
     try {
       await exec("node counter-error.js", {
         cwd: dirname(import.meta),
@@ -79,8 +77,8 @@ describe("exec", () => {
       });
     } catch (error) {
       const err = error as ExecError;
-      await expect(err.exitCode).toEqual(1);
-      await expect(err.output).toContain("i is 3!!!! Error!!!!");
+      assert.equal(err.exitCode, 1);
+      assert(err.output.includes("i is 3!!!! Error!!!!"));
     }
   });
 });
