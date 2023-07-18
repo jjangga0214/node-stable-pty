@@ -1,4 +1,5 @@
 import { execPty } from "./binding.cjs";
+import upath from "upath";
 
 export interface ExecOptions {
   cwd?: string;
@@ -19,6 +20,7 @@ export function exec(
   command: string,
   { cwd = process.cwd(), print = true, onLine = () => {} }: ExecOptions = {}
 ): ExecReturn {
+  cwd = upath.normalize(cwd);
   // @ts-ignore
   const execPtyResStore: { kill: () => void } = {};
   // @ts-ignore
