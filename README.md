@@ -1,14 +1,12 @@
 # stable-pty
 
-An alternative to Node.js `child_process.exec` or `child_process.spawn`, with PTY support.
+An alternative to Node.js `child_process.exec` or `child_process.spawn`, with [PTY](https://en.wikipedia.org/wiki/Pseudoterminal) support.
 
 ```bash
 npm install stable-pty
+yarn add stable-pty
+pnpm add stable-pty
 ```
-
-## What is PTY?
-
-PTY means [Pseudoterminal](https://en.wikipedia.org/wiki/Pseudoterminal).
 
 ## Why?
 
@@ -22,12 +20,12 @@ Here's where `stable-pty` comes in.
 
 ## Benefits
 
-- __Compatibility__: Every node.js version of >=16 is compatible.
-(<small>Note that this cannot be guaranteed with other packages like `node-pty`.</small>)
-
+- __Compatibility__: *Every* Node.js version of >=16 is compatible.
+_(Note that other packages like `node-pty` cannot guarantee this level of compatibility.)_
+- __N-API__: `stable-pty` only depends on Node.js [N-API](https://medium.com/the-node-js-collection/n-api-next-generation-node-js-apis-for-native-modules-169af5235b06), the official stable native addon API. It is recommended over the old way of writing C/C++ code directly depending on V8 and/or [NAN](https://github.com/nodejs/nan) APIs.
+- __Portable PTY__: `stable-pty` ships portable PTY internally, so you don't have to experience subtle unreproducible issues depending on the different environment.
 - __Cross-Platform__: macOS, Linux, and Windows are all supported.
-
-- __Stability__: `stable-pty` consumes Node.js [N-API](https://medium.com/the-node-js-collection/n-api-next-generation-node-js-apis-for-native-modules-169af5235b06), the official stable native addon API, which is recommended over the old way of writing C/C++ code directly depending on V8 and/or [NAN](https://github.com/nodejs/nan) APIs. `stable-pty` is written in Rust, free from weird memory issues. `stable-pty` ships portable PTY, so you don't have to experience subtle unreproducible issues depending on the different environment.
+- __Written in Rust__: Free from weird memory issues.
 
 ## License
 
